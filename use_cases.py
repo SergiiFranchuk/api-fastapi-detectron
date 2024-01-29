@@ -5,7 +5,14 @@ from utils import save_video_file
 from tasks import detect_objects_on_video
 
 
+class EmailError(Exception):
+    """Generic email error."""
+
+
 class BaseUseCase:
+    def __init__(self, user_id: int):
+        self.user_id = user_id
+
     def __call__(self, *args, **kwargs):
         raise NotImplementedError
 
