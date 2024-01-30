@@ -5,7 +5,7 @@ from detectron2 import model_zoo
 import cv2
 import numpy as np
 
-import settings
+from application import settings
 
 
 class Detector:
@@ -13,8 +13,12 @@ class Detector:
         self.cfg = get_cfg()
 
         # Load model config and pretrained model
-        self.cfg.merge_from_file(model_zoo.get_config_file(settings.DETECTION_MODEL_CONFIG_FILE_PATH))
-        self.cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url(settings.DETECTION_MODEL_CONFIG_FILE_PATH)
+        self.cfg.merge_from_file(
+            model_zoo.get_config_file(settings.DETECTION_MODEL_CONFIG_FILE_PATH)
+        )
+        self.cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url(
+            settings.DETECTION_MODEL_CONFIG_FILE_PATH
+        )
 
         self.cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = settings.DETECTION_THREASHOLD
         self.cfg.MODEL.DEVICE = "cpu"  # Use CPU for inference

@@ -1,5 +1,5 @@
-from repositories import TortoiseRepository
-from users.models import User
+from application.repositories import TortoiseRepository
+from application.users.models import User
 
 
 class UserRepository(TortoiseRepository):

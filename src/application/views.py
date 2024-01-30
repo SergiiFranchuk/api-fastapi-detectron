@@ -1,8 +1,8 @@
 from fastapi import APIRouter, UploadFile, File, Depends
 
-from users.depndencies import get_current_user
-from use_cases import StartDetectionUseCase, CheckDetectionResultUseCase
-from users.models import User
+from application.users.dependencies import get_current_user
+from application.use_cases import StartDetectionUseCase, CheckDetectionResultUseCase
+from application.users.models import User
 
 router = APIRouter(prefix="/tasks", tags=["Detection tasks"])
 
@@ -15,8 +15,8 @@ async def detect_objects_on_video(
     return await use_case(videofile)
 
 
-@router.post("/video-analyze-result/{task_id}/")
-async def check_video_analyze_result(
+@router.get("/video-analyze-result/{task_id}/")
+async def get_video_analyze_result(
     task_id: str, user: User = Depends(get_current_user)
 ):
     use_case = CheckDetectionResultUseCase(user)

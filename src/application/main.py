@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from tortoise.contrib.fastapi import register_tortoise
 
-import settings
-from views import router as tasks_router
-from users.views import router as users_router
+from application import settings
+from application.views import router as tasks_router
+from application.users.views import router as users_router
 
 
 application = FastAPI()

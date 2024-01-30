@@ -1,10 +1,15 @@
 from fastapi import HTTPException, status
 
-import settings
-from users.exceptions import AuthenticationError
-from users.models import User
-from users.repositories import UserRepository
-from users.utils import hash_password, generate_jwt, validate_password, decode_token
+from application import settings
+from application.users.exceptions import AuthenticationError
+from application.users.models import User
+from application.users.repositories import UserRepository
+from application.users.utils import (
+    hash_password,
+    generate_jwt,
+    validate_password,
+    decode_token,
+)
 
 
 class BaseUnauthorizedUserUseCase:

@@ -1,4 +1,4 @@
-from interfaces import AbstractRepository
+from application.interfaces import AbstractRepository
 
 
 class TortoiseRepository(AbstractRepository):

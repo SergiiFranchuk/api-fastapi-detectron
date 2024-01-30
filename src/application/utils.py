@@ -5,7 +5,7 @@ from uuid import uuid4
 import aiofiles
 from fastapi import UploadFile
 
-import settings
+from application import settings
 
 
 async def save_video_file(video_file: UploadFile) -> str:

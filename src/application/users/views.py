@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Form, status, Depends
 from pydantic import EmailStr
 
-from users.depndencies import get_current_user
-from users.models import User
-from users.schemas import (
+from application.users.dependencies import get_current_user
+from application.users.models import User
+from application.users.schemas import (
     SignUpIn,
     SignUpOut,
     SignInOut,
@@ -12,7 +12,7 @@ from users.schemas import (
     UserOut,
     UpdateUserIn,
 )
-from users.use_cases import (
+from application.users.use_cases import (
     UserSignUpUseCase,
     UserSignInUseCase,
     RefreshAccessTokenUseCase,

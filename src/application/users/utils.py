@@ -3,9 +3,9 @@ from hashlib import sha256
 
 import jwt
 
-import settings
-from users.exceptions import AuthenticationError
-from users.models import User
+from application import settings
+from application.users.exceptions import AuthenticationError
+from application.users.models import User
 
 
 def generate_jwt(user: User, lifetime: timedelta, refresh_token: bool = False) -> str:

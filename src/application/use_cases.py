@@ -1,9 +1,9 @@
 from celery.result import AsyncResult
 from fastapi import UploadFile
 
-from users.models import User
-from utils import save_video_file
-from tasks import detect_objects_on_video
+from application.users.models import User
+from application.utils import save_video_file
+from application.tasks import detect_objects_on_video
 
 
 class BaseUseCase:

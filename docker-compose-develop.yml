@@ -1,0 +1,55 @@
+version: "3.7"
+
+services:
+  fastapi:
+    container_name: detector-fastapi
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint: [ "bash", "docker-entrypoint.sh" ]
+    volumes:
+      - ./src/:/home/fastapi-detectron/
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    env_file:
+      - .env.develop
+
+  db:
+    container_name: detectron_db
+    image: postgres:13.4-alpine
+    restart: always
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    env_file:
+      - .env.develop
+
+  redis:
+    container_name: detectron_redis
+    image: "redis:alpine"
+    expose:
+      - 6379
+
+  celery-detectron:
+    container_name: detectron_celery-detect
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint: [ "bash", "docker-entrypoint-celery-detect.sh" ]
+    volumes:
+      - ./src/:/home/fastapi-detectron/
+    depends_on:
+      - redis
+    env_file:
+      - .env.develop
+
+
+networks:
+  default:
+    name: develop-network
+
+volumes:
+  db_data:

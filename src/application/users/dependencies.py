@@ -3,9 +3,9 @@ from typing import Optional
 from fastapi import Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
-from users.exceptions import AuthenticationError
-from users.repositories import UserRepository
-from users.utils import decode_token
+from application.users.exceptions import AuthenticationError
+from application.users.repositories import UserRepository
+from application.users.utils import decode_token
 
 oauth2_scheme = HTTPBearer()
 

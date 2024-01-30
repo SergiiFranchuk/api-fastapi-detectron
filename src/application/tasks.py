@@ -1,10 +1,10 @@
 from celery import Celery
 
-from detector import Detector
+from application.detector import Detector
 
 celery = Celery("detectron")
 
-celery.config_from_object("settings", namespace="CELERY")
+celery.config_from_object("application.settings", namespace="CELERY")
 celery.autodiscover_tasks()
 
 
