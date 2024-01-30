@@ -1,19 +1,16 @@
 from celery.result import AsyncResult
 from fastapi import UploadFile
 
+from users.models import User
 from utils import save_video_file
 from tasks import detect_objects_on_video
 
 
-class EmailError(Exception):
-    """Generic email error."""
-
-
 class BaseUseCase:
-    def __init__(self, user_id: int):
-        self.user_id = user_id
+    def __init__(self, user: User = None):
+        self.user = user
 
-    def __call__(self, *args, **kwargs):
+    async def __call__(self, *args, **kwargs):
         raise NotImplementedError
 
 

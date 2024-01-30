@@ -1,4 +1,3 @@
-from fastapi import Form
 from pydantic import BaseModel, EmailStr, Field
 
 
@@ -18,16 +17,23 @@ class UserOut(BaseModel):
     last_name: str
 
 
+class UpdateUserIn(BaseModel):
+    first_name: str | None = Field(None, min_length=1, max_length=70)
+    last_name: str | None = Field(None, min_length=1, max_length=70)
+
+
 class SignUpOut(BaseModel):
     user: UserOut
     access_token: str
+    refresh_token: str
 
 
-class SignIn(BaseModel):
-    email: EmailStr
-    password: str
+class SignInOut(SignUpOut): ...
 
 
-class SignInOut(BaseModel):
+class RefreshTokenIn(BaseModel):
+    refresh_token: str
+
+
+class RefreshTokenOut(BaseModel):
     access_token: str
-    token_type: str
