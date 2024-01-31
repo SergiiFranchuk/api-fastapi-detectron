@@ -1,4 +1,5 @@
 import abc
+import numpy as np
 
 
 class AbstractRepository(abc.ABC):
@@ -30,4 +31,10 @@ class AbstractUnitOfWork(abc.ABC):
 
     @abc.abstractmethod
     def __exit__(self, *args, **kwargs):
+        raise NotImplementedError
+
+
+class AbstractImageAnalysisMLModel(abc.ABC):
+    @abc.abstractmethod
+    def analyze_frame(self, frame: np.ndarray):
         raise NotImplementedError

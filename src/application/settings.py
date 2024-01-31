@@ -1,7 +1,8 @@
 import os
 from datetime import timedelta
 
-DETECTION_THREASHOLD = 0.75
+ML_MODEL_ANALYSIS_THRESHOLD = 0.75
+ML_MODEL_PROCESSING_DEVICE = "cpu"
 
 BASE_STORAGE_PATH = "storage/videos/"
 

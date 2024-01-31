@@ -1,9 +1,10 @@
 from celery.result import AsyncResult
 from fastapi import UploadFile
 
+from application.constants import FrameGenerator
 from application.users.models import User
 from application.utils import save_video_file
-from application.tasks import detect_objects_on_video
+from application.tasks import analyse_input_frames_task
 
 
 class BaseUseCase:
@@ -14,10 +15,12 @@ class BaseUseCase:
         raise NotImplementedError
 
 
-class StartDetectionUseCase(BaseUseCase):
-    async def __call__(self, videofile: UploadFile):
-        filepath = await save_video_file(videofile)
-        task = detect_objects_on_video.delay(filepath)
+class DetectObjectsInVideoFileUseCase(BaseUseCase):
+    async def __call__(self, video_file: UploadFile):
+        filepath = await save_video_file(video_file)
+        task = analyse_input_frames_task.delay(
+            filepath, FrameGenerator.VIDEO_FILE.value
+        )
         return {"task_id": task.id}
 
 

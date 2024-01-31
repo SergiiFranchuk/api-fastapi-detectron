@@ -1,8 +1,11 @@
 import os
 import pathlib
+from typing import Generator
 from uuid import uuid4
+import numpy as np
 
 import aiofiles
+import cv2
 from fastapi import UploadFile
 
 from application import settings
@@ -20,3 +23,12 @@ async def save_video_file(video_file: UploadFile) -> str:
         await output_file.write(content)
 
     return filepath
+
+
+def generate_frames_from_video(video_path: str) -> Generator[np.ndarray, None, None]:
+    video_manager = cv2.VideoCapture(video_path)
+    exist, frame = video_manager.read()
+    while exist:
+        yield frame
+        exist, frame = video_manager.read()
+    video_manager.release()
