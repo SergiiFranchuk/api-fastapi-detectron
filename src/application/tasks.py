@@ -19,15 +19,10 @@ def analyse_input_frames_task(
     frame_generator_name: str,
     ml_tool: str = ImageAnalysisMLTool.DETECTRON_2,
     analysis_task_type: str = ImageAnalysisOperationType.OBJECT_DETECTION,
-) -> dict:
+) -> list:
     frame_collection = FRAME_GENERATORS[frame_generator_name](source_path)
     frame_processor = FrameAnalysisProcessor(
         ml_tool=ml_tool, analysis_task_type=analysis_task_type
     )
-    try:
-        return {
-            "status": "Success",
-            "result": frame_processor.analyze_frames(frame_collection),
-        }
-    except Exception:
-        return {"status": "Error", "result": "Something went wrong"}
+
+    return frame_processor.analyze_frames(frame_collection)

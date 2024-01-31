@@ -16,7 +16,7 @@ class BaseUseCase:
 
 
 class DetectObjectsInVideoFileUseCase(BaseUseCase):
-    async def __call__(self, video_file: UploadFile):
+    async def __call__(self, video_file: UploadFile) -> dict:
         filepath = await save_video_file(video_file)
         task = analyse_input_frames_task.delay(
             filepath, FrameGenerator.VIDEO_FILE.value
@@ -25,10 +25,17 @@ class DetectObjectsInVideoFileUseCase(BaseUseCase):
 
 
 class CheckDetectionResultUseCase(BaseUseCase):
-    async def __call__(self, task_id: str):
+    async def __call__(self, task_id: str) -> dict:
         task_result = AsyncResult(task_id)
-        if task_result.ready():
-            result = task_result.get()
-            return {"task_id": task_id, "status": "Completed", "result": result}
-        else:
-            return {"task_id": task_id, "status": "In progress"}
+
+        result_data = {
+            "success": task_result.successful(),
+            "ready": task_result.ready(),
+        }
+
+        if task_result.successful():
+            result_data["result"] = task_result.result
+        elif task_result.failed():
+            result_data["error"] = task_result.result.args
+
+        return result_data
