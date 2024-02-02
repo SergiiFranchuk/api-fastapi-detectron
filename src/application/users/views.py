@@ -11,6 +11,9 @@ from application.users.schemas import (
     RefreshTokenOut,
     UserOut,
     UpdateUserIn,
+    SingIn,
+    ChangePasswordIn,
+    ChangePasswordOut,
 )
 from application.users.use_cases import (
     UserSignUpUseCase,
@@ -30,9 +33,9 @@ async def sign_up(payload: SignUpIn):
 
 
 @router.post("/signin", response_model=SignInOut)
-async def sign_in(email: EmailStr = Form(), password: str = Form()):
+async def sign_in(credentials: SingIn):
     use_case = UserSignInUseCase()
-    return await use_case(email, password)
+    return await use_case(credentials.model_dump())
 
 
 @router.post("/authentication/token-refresh", response_model=RefreshTokenOut)
@@ -41,15 +44,12 @@ async def token_refresh(refresh_token: RefreshTokenIn):
     return await use_case(refresh_token)
 
 
-@router.post("/authentication/password/change/")
+@router.post("/authentication/password/change/", response_model=ChangePasswordOut)
 async def change_user_password(
-    old_password: str = Form(),
-    new_password: str = Form(),
-    user: User = Depends(get_current_user),
+    credentials: ChangePasswordIn, user: User = Depends(get_current_user)
 ):
     use_case = PasswordChangeUseCase(user)
-    await use_case(old_password, new_password)
-    return {"detail": "New password has been saved."}
+    return await use_case(credentials.model_dump())
 
 
 @router.get("/me/", response_model=UserOut)

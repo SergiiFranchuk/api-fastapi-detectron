@@ -1,10 +1,11 @@
 import os
 from datetime import timedelta
 
-ML_MODEL_ANALYSIS_THRESHOLD = 0.75
-ML_MODEL_PROCESSING_DEVICE = "cpu"
+DETECTRON2_MODEL_ANALYSIS_THRESHOLD = 0.75
+DETECTRON2_PROCESSING_DEVICE = "cpu"
 
 BASE_STORAGE_PATH = "storage/videos/"
+UPLOAD_VIDEO_MAX_SIZE_MB = 100
 
 JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", default="secretkey")
 JWT_ALGORITHM = "HS256"
@@ -31,8 +32,11 @@ TORTOISE_ORM_CONFIG = {
         ),
     },
     "apps": {
-        "application.users": {
-            "models": ["application.users.models", "aerich.models"],
+        "users": {
+            "models": [
+                "application.users.models",
+                "aerich.models",
+            ],
             "default_connection": "default",
         },
     },

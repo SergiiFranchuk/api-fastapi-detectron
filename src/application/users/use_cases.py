@@ -31,13 +31,13 @@ class BaseAuthorizedUserUseCase:
 
 class UserSignUpUseCase(BaseUnauthorizedUserUseCase):
 
-    async def __call__(self, user_data: dict):
+    async def __call__(self, user_data: dict) -> dict:
         if await self.accounts.retrieve_by_email(user_data.get("email")):
 
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST, detail="email already in use"
             )
-        user_data["password"] = hash_password(user_data.get("password"))
+        user_data["password"] = hash_password(user_data.get("password1"))
         user = await self.accounts.create(user_data)
 
         return {
@@ -53,11 +53,13 @@ class UserSignUpUseCase(BaseUnauthorizedUserUseCase):
 
 class UserSignInUseCase(BaseUnauthorizedUserUseCase):
 
-    async def __call__(self, email: str, password: str):
+    async def __call__(self, credentials: dict) -> dict:
 
-        user = await self.accounts.retrieve_by_email(email)
+        user = await self.accounts.retrieve_by_email(credentials.get("email"))
 
-        if not user or not validate_password(password, user.password):
+        if not user or not validate_password(
+            credentials.get("password"), user.password
+        ):
             raise AuthenticationError("invalid username or password")
 
         return {
@@ -73,7 +75,7 @@ class UserSignInUseCase(BaseUnauthorizedUserUseCase):
 
 class RefreshAccessTokenUseCase(BaseUnauthorizedUserUseCase):
 
-    async def __call__(self, token):
+    async def __call__(self, token) -> dict:
         payload = decode_token(token)
 
         if payload.get("token_type") != "refresh_token":
@@ -92,20 +94,21 @@ class RefreshAccessTokenUseCase(BaseUnauthorizedUserUseCase):
 
 
 class PasswordChangeUseCase(BaseAuthorizedUserUseCase):
-    async def __call__(self, old_password: str, new_password):
+    async def __call__(self, payload: dict) -> dict:
 
-        if not validate_password(old_password, self.user.password):
+        if not validate_password(payload.get("old_password"), self.user.password):
             raise AuthenticationError(
                 "Your old password was entered incorrectly. Please enter it again"
             )
 
         await self.accounts.update(
-            self.user.id, {"password": hash_password(new_password)}
+            self.user.id, {"password": hash_password(payload.get("new_password1"))}
         )
+        return {"detail": "New password has been saved."}
 
 
 class UpdateCurrentUserUseCase(BaseAuthorizedUserUseCase):
-    async def __call__(self, payload: dict):
+    async def __call__(self, payload: dict) -> User:
 
         await self.accounts.update(self.user.id, {**payload})
 

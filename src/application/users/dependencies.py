@@ -1,9 +1,8 @@
-from typing import Optional
-
 from fastapi import Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from application.users.exceptions import AuthenticationError
+from application.users.models import User
 from application.users.repositories import UserRepository
 from application.users.utils import decode_token
 
@@ -12,12 +11,15 @@ oauth2_scheme = HTTPBearer()
 
 async def get_current_user(
     token_data: HTTPAuthorizationCredentials = Depends(oauth2_scheme),
-) -> int:
+) -> User:
     token = token_data.credentials
 
     payload = decode_token(token)
 
-    user_id: Optional[int] = payload.get("user_id")
+    if payload.get("token_type") != "access_token":
+        raise AuthenticationError("Not an access token type provided")
+
+    user_id = payload.get("user_id")
     if user_id is None:
         raise AuthenticationError("Token is invalid")
 

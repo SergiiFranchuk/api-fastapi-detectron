@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
-from hashlib import sha256
 
+import bcrypt
 import jwt
 
 from application import settings
@@ -43,11 +43,14 @@ def decode_token(token: str):
     return payload
 
 
-def hash_password(password):
-    sha256().update(password.encode("utf-8"))
-    hashed_password = sha256().digest().hex()
-    return hashed_password
+def hash_password(password: str) -> str:
+    password_bytes = password.encode("utf-8")
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(password_bytes, salt)
+    return hashed_password.decode("utf-8")
 
 
-def validate_password(password: str, hashed_password: str) -> bool:
-    return hash_password(password) == hashed_password
+def verify_password(password: str, hashed_password: str) -> bool:
+    password_bytes = password.encode("utf-8")
+    hashed_password_bytes = hashed_password.encode("utf-8")
+    return bcrypt.checkpw(password_bytes, hashed_password_bytes)

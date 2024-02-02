@@ -1,13 +1,9 @@
 from typing import Generator
 
-from application.ml_models import ImageAnalysisMLModelFactory
-
 
 class FrameAnalysisProcessor:
-    def __init__(self, ml_tool, analysis_task_type):
-        self.ml_model = ImageAnalysisMLModelFactory().build_model(
-            ml_tool, analysis_task_type
-        )
+    def __init__(self, ml_model):
+        self.ml_model = ml_model
 
     def analyze_frames(self, frame_collection: Generator) -> list:
         result = []

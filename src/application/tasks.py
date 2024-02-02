@@ -1,11 +1,12 @@
 from celery import Celery
 
-from application.constants import (
-    FRAME_GENERATORS,
-    ImageAnalysisOperationType,
+from application.ml_tools.constants import (
     ImageAnalysisMLTool,
+    ImageAnalysisOperationType,
 )
-from application.analysis_processor import FrameAnalysisProcessor
+from application.ml_tools.factories import ml_model_factory_map
+from application.ml_tools.services import FrameAnalysisProcessor
+from application.utils import generate_frames_from_video
 
 celery = Celery("frame_analysis")
 
@@ -16,13 +17,13 @@ celery.autodiscover_tasks()
 @celery.task()
 def analyse_input_frames_task(
     source_path: str,
-    frame_generator_name: str,
-    ml_tool: str = ImageAnalysisMLTool.DETECTRON_2,
+    ml_tool_name: str = ImageAnalysisMLTool.DETECTRON_2,
     analysis_task_type: str = ImageAnalysisOperationType.OBJECT_DETECTION,
 ) -> list:
-    frame_collection = FRAME_GENERATORS[frame_generator_name](source_path)
-    frame_processor = FrameAnalysisProcessor(
-        ml_tool=ml_tool, analysis_task_type=analysis_task_type
-    )
+
+    frame_collection = generate_frames_from_video(source_path)
+
+    ml_model = ml_model_factory_map[ml_tool_name]().build_model(analysis_task_type)
+    frame_processor = FrameAnalysisProcessor(ml_model)
 
     return frame_processor.analyze_frames(frame_collection)

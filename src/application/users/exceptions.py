@@ -8,3 +8,7 @@ class AuthenticationError(HTTPException):
             detail=detail,
             headers={"WWW-Authenticate": "Bearer"},
         )
+
+
+class MismatchPasswordError(Exception):
+    """Error if different passwords while sign up"""
