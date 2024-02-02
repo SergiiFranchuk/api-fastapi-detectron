@@ -12,3 +12,7 @@ class AuthenticationError(HTTPException):
 
 class MismatchPasswordError(Exception):
     """Error if different passwords while sign up"""
+
+
+class PermissionDeniedError(Exception):
+    """User does not meet the existing requirements for a specific action."""

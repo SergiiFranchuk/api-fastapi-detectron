@@ -36,6 +36,7 @@ TORTOISE_ORM_CONFIG = {
             "models": [
                 "application.users.models",
                 "aerich.models",
+                "application.models",
             ],
             "default_connection": "default",
         },

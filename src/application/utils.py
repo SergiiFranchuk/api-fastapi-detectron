@@ -1,12 +1,14 @@
+import asyncio
 import os
 import pathlib
-from typing import Generator
+from typing import Generator, Callable
 from uuid import uuid4
 import numpy as np
 
 import aiofiles
 import cv2
 from fastapi import UploadFile
+from tortoise import Tortoise
 
 from application import settings
 
@@ -32,3 +34,25 @@ def generate_frames_from_video(video_path: str) -> Generator[np.ndarray, None, N
         yield frame
         exist, frame = video_manager.read()
     video_manager.release()
+
+
+async def connect_db():
+    await Tortoise.init(config=settings.TORTOISE_ORM_CONFIG)
+
+
+async def disconnect_db():
+    await Tortoise.close_connections()
+
+
+async def database_wrapper(func: Callable, *args, **kwargs):
+    try:
+        await connect_db()
+        result = await func(*args, **kwargs)
+    finally:
+        await disconnect_db()
+
+    return result
+
+
+def async_to_sync(func: Callable, *args, **kwargs):
+    return asyncio.run(database_wrapper(func, *args, **kwargs))

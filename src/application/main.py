@@ -10,8 +10,9 @@ from application.exception_handlers import (
 from application.exceptions import CannotOpenVideoFileError, CannotReadVideoFileError
 from application.users.exception_handlers import (
     password_mismatch_exception_handler,
+    permission_denied_exception_handler,
 )
-from application.users.exceptions import MismatchPasswordError
+from application.users.exceptions import MismatchPasswordError, PermissionDeniedError
 from application.views import router as tasks_router
 from application.users.views import router as users_router
 
@@ -29,6 +30,9 @@ application.add_exception_handler(
 )
 application.add_exception_handler(
     MismatchPasswordError, password_mismatch_exception_handler
+)
+application.add_exception_handler(
+    PermissionDeniedError, permission_denied_exception_handler
 )
 
 

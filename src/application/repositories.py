@@ -1,20 +1,12 @@
-from application.interfaces import AbstractRepository
+from application.common.repositories import TortoiseRepository
+from application.models import Task
 
 
-class TortoiseRepository(AbstractRepository):
-    model_class = None
+class TaskRepository(TortoiseRepository):
+    model_class = Task
 
-    async def list(self, **filters):
-        return await self.model_class.filter(**filters)
+    async def get_by_worker_task_id(self, reference):
+        return await self.model_class.get_or_none(worker_task_id=reference)
 
-    async def create(self, data):
-        return await self.model_class.create(**data)
-
-    async def update(self, reference, data):
-        return await self.model_class.filter(id=reference).update(**data)
-
-    async def retrieve(self, reference):
-        return await self.model_class.get_or_none(id=reference)
-
-    async def delete(self, reference):
-        return await self.model_class.filter(id=reference).delete()
+    async def update_by_worker_task_id(self, reference, data):
+        return await self.model_class.filter(worker_task_id=reference).update(**data)

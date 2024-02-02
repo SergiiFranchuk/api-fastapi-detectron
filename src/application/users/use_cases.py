@@ -7,7 +7,7 @@ from application.users.repositories import UserRepository
 from application.users.utils import (
     hash_password,
     generate_jwt,
-    validate_password,
+    verify_password,
     decode_token,
 )
 
@@ -57,9 +57,7 @@ class UserSignInUseCase(BaseUnauthorizedUserUseCase):
 
         user = await self.accounts.retrieve_by_email(credentials.get("email"))
 
-        if not user or not validate_password(
-            credentials.get("password"), user.password
-        ):
+        if not user or not verify_password(credentials.get("password"), user.password):
             raise AuthenticationError("invalid username or password")
 
         return {
@@ -96,7 +94,7 @@ class RefreshAccessTokenUseCase(BaseUnauthorizedUserUseCase):
 class PasswordChangeUseCase(BaseAuthorizedUserUseCase):
     async def __call__(self, payload: dict) -> dict:
 
-        if not validate_password(payload.get("old_password"), self.user.password):
+        if not verify_password(payload.get("old_password"), self.user.password):
             raise AuthenticationError(
                 "Your old password was entered incorrectly. Please enter it again"
             )

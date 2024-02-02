@@ -16,7 +16,7 @@ async def get_current_user(
 
     payload = decode_token(token)
 
-    if payload.get("token_type") != "access_token":
+    if payload.get("token_type") != "access":
         raise AuthenticationError("Not an access token type provided")
 
     user_id = payload.get("user_id")

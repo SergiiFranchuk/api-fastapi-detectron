@@ -1,4 +1,4 @@
-from application.repositories import TortoiseRepository
+from application.common.repositories import TortoiseRepository
 from application.users.models import User
 
 
