@@ -4,6 +4,12 @@
 ## Overview
 This project is a FastAPI application that allows users to upload small video files for analysis. It leverages Tortoise-ORM for database interactions and integrates a background task processing system using Celery to handle video analysis. The core functionality involves analyzing video files frame by frame using the Detectron2 machine learning model to detect objects within the images.
 
+
+
+https://github.com/SergiiFranchuk/api-fastapi-detectron/assets/157480253/311329d2-f82b-4047-88ce-920ec4755eca
+
+
+
 ## Architecture design schema
 ![design_schema.png](design_schema.png)
 
