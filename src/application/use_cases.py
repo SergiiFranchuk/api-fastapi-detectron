@@ -1,3 +1,5 @@
+import uuid
+
 from celery.result import AsyncResult
 from fastapi import UploadFile
 
@@ -23,7 +25,9 @@ class DetectObjectsInVideoFileUseCase(BaseUseCase):
         filepath = await save_video_file(video_file)
         verify_video_file_integrity(filepath)
         task = analyse_input_frames_task.delay(filepath)
-        await self.tasks.create({"owner_id": self.user.id, "worker_task_id": task.id})
+        await self.tasks.create(
+            {"id": uuid.uuid4(), "owner_id": self.user.id, "worker_task_id": task.id}
+        )
 
         return {"task_id": task.id}
 

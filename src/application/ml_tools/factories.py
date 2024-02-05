@@ -8,10 +8,11 @@ from application.ml_tools.constants import (
     DETECTRON_MODEL_CONFIG_FILE_PATH_MAP,
     ImageAnalysisMLTool,
 )
+from application.ml_tools.interfaces import AbstractMLToolFactory
 from application.ml_tools.ml_models import Detectron2MLModel
 
 
-class Detectron2ToolFactory:
+class Detectron2ToolFactory(AbstractMLToolFactory):
 
     def build_model(
         self,
